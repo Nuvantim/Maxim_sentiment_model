@@ -75,7 +75,7 @@ After the data has undergone the filtering stage, word tokenization is performed
 
 The review data of the Maxim application indicates that the number of reviews has steadily increased each year, reflecting the growing popularity of the application. Positive reviews have consistently dominated, rising from 75% in 2020 to 82% in 2024, which demonstrates an improvement in user satisfaction. Meanwhile, negative reviews experienced an increase up until 2023 but declined again in 2024, suggesting improvements in the quality of the application. Overall, this trend reflects both the rapid growth of the user base and the increasing level of satisfaction with the Maxim application.
 
-<a><img src="https://github.com/Nuvantim/Maxim_Sentiment_Model/image/diagram.png" alt="diagram" border="0"></a>
+<a><img src="https://github.com/Nuvantim/Maxim_sentiment_model/image/diagram.png" alt="diagram" border="0"></a>
 
 | Tahun | Negatif | Positif |
 |-------|---------|---------|
@@ -88,7 +88,7 @@ The review data of the Maxim application indicates that the number of reviews ha
 ### WordCloud
 The WordCloud generated from Maxim application reviews shows that the majority of users provided positive feedback, with dominant words such as good, friendly, driver, very, excellent, fast, and great. These words reflect user appreciation for driver friendliness, fast service, and the overall quality of the platform. Negative terms such as slow, lacking, and problem also appear, but their smaller size indicates that they are far less frequent and not dominant. Overall, the WordCloud reinforces the finding that user experiences with the Maxim application tend to be positive and satisfactory.
 
-<a><img src="https://github.com/Nuvantim/Maxim_Sentiment_Model/image/wordcloud.png" alt="wordcloud" border="0"></a>
+<a><img src="https://github.com/Nuvantim/Maxim_sentiment_model/image/wordcloud.png" alt="wordcloud" border="0"></a>
 
 ## Building the FastText Model
 
@@ -107,13 +107,13 @@ This stage involved constructing a GRU (Gated Recurrent Unit) classifier archite
 
 The training loss graph per epoch shows a consistent decrease from the beginning to the end of the training process. In the first epoch, the loss was 0.2493, then gradually decreased to 0.1565 by the 20th epoch. This downward trend indicates that the GRU model was able to learn effectively from the data, with each epoch producing increasingly optimized parameters. The stable and steadily decreasing loss curve, without significant spikes, also demonstrates that the training process was effective and did not experience overfitting at this stage.
 
-<a><img src="https://github.com/Nuvantim/Maxim_Sentiment_Model/image/loss-graph.png" alt="loss-graph" border="0"></a>
+<a><img src="https://github.com/Nuvantim/Maxim_sentiment_model/image/loss-graph.png" alt="loss-graph" border="0"></a>
 
 ### Confusion Matrix
 
 The evaluation results using the confusion matrix indicate that the model performed well, achieving an overall accuracy of 92%. For the negative class, the precision reached 0.73 and recall 0.95, showing that the model is better at detecting negative data, although some positive predictions were misclassified. Meanwhile, for the positive class, precision was very high at 0.98 with a recall of 0.91, meaning the model was highly accurate in predicting positive data, though a small portion of positives was missed. The balanced f1-scores (0.83 for negative and 0.95 for positive) demonstrate that the model performs consistently across both classes, with a weighted average of 0.92, indicating that the model
 
-<a><img src="https://github.com/Nuvantim/Maxim_Sentiment_Model/image/confusion-matrix.png" alt="confusion matrix" border="0"></a>
+<a><img src="https://github.com/Nuvantim/Maxim_sentiment_model/image/confusion-matrix.png" alt="confusion matrix" border="0"></a>
 
 | Label        | Precision | Recall | F1-Score | Support |
 |--------------|-----------|--------|----------|---------|
