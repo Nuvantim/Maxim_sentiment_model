@@ -68,3 +68,5 @@ model = FastText(
 # -----------------------------
 model.save("models/maxim_fasttext.model")
 print("✅ FastText model berhasil disimpan ke models/maxim_fasttext.model")
+model.wv.save_word2vec_format("models/maxim_fasttext.vec", binary=False)
+print("✅ FastText vectors berhasil diexport ke models/maxim_fasttext.vec")
