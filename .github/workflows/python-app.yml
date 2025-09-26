@@ -1,0 +1,109 @@
+name: Python application
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  word-embedding-model:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+
+    steps:
+      - name: Check Out
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12.11
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.12.11"
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y p7zip-full
+
+      - name: Load data
+        run: |
+          7z x sentiment_maxim.7z
+          rm *.7z
+          mkdir models
+
+      - name: Install python dependencies
+        run: pip install --upgrade -r requirements.txt
+
+      - name: Build Word Embedding Model
+        run: python Fasttext.py
+
+      - name: Upload Models
+        uses: actions/upload-artifact@v4
+        with:
+          name: word_model
+          path: |
+            clean_data.csv
+            models
+
+  gru-models:
+    runs-on: ubuntu-latest
+    needs: word-embedding-model
+    timeout-minutes: 240
+
+    steps:
+      - name: Check Out
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12.11
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.12.11"
+
+      - name: Install python dependencies
+        run: pip install --upgrade -r requirements.txt
+
+      - name: Download artifact (word_model)
+        uses: actions/download-artifact@v4
+        with:
+          name: word_model
+          path: .
+
+      - name: Build ML Model
+        run: python GRU.py
+
+      - name: Upload Models
+        uses: actions/upload-artifact@v4
+        with:
+          name: setup_model
+          path: models
+
+  push-models:
+    runs-on: ubuntu-latest
+    needs: gru-models
+    timeout-minutes: 240
+    
+    steps:
+      - name: Check Out
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12.11
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.12.11"
+
+      - name: Install python dependencies
+        run: pip install --upgrade -r requirements.txt
+
+      - name: Download artifact (setup_model)
+        uses: actions/download-artifact@v4
+        with:
+          name: setup_model
+          path: ./models
+
+      - name: Show models
+        run: ls -lh ./models
+
+      - name: Push models
+        run: python hf.py
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
