@@ -66,7 +66,7 @@ After the data has undergone the filtering stage, word tokenization is performed
 | 1  | Pengguna Google | aku suka pakai Maxim tapi sekarang daftar susa...           | 2      | 2024-12-30 23:47:00 | NEGATIF | [aku, suka, pakai, Maxim, tapi, sekarang, daft...] |
 | 2  | Pengguna Google | penjemputan nya sllu tepat wkt tdk perlu menu...           | 5      | 2024-12-30 23:46:58 | POSITIF | [penjemputan, nya, sllu, tepat, wkt, tdk, perl...] |
 | 4  | Pengguna Google | cepat tepat                                                 | 5      | 2024-12-30 23:45:00 | POSITIF | [cepat, tepat]                            |
-| 5  | Pengguna Google | Bagus                                                       | 5      | 2024-12-30 23:40:18 | NEGATIF | [Bagus]                                   |
+| 5  | Pengguna Google | Bagus                                                       | 5      | 2024-12-30 23:40:18 | POSITIF | [Bagus]                                   |
 
 
 # Results
