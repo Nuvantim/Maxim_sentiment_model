@@ -1,0 +1,7 @@
+numpy
+emoji
+gensim
+joblib
+onnx
+onnxruntime
+gradio

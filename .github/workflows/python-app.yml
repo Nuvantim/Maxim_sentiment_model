@@ -35,7 +35,7 @@ jobs:
         run: pip install --upgrade -r requirements.txt
 
       - name: Build Word Embedding Model
-        run: python Fasttext.py
+        run: python model_fasttext.py
 
       - name: Upload Models
         uses: actions/upload-artifact@v4
@@ -69,7 +69,7 @@ jobs:
           path: .
 
       - name: Build ML Model
-        run: python GRU.py
+        run: python model_gru.py
 
       - name: Upload Models
         uses: actions/upload-artifact@v4
@@ -104,6 +104,6 @@ jobs:
         run: ls -lh ./models
 
       - name: Push models
-        run: python hf.py
+        run: python push_hungingface.py
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
