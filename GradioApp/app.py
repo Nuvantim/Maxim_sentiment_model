@@ -19,8 +19,8 @@ le = joblib.load(label_encoder_path)
 print("🔹 Loading ONNX model...")
 session = ort.InferenceSession(onnx_model_path)
 
-input_name = session.get_inputs()[0].name
-output_name = session.get_outputs()[0].name
+inputs = gr.Textbox(label="Masukkan ulasan", lines=2, autofocus=True)
+outputs = gr.Textbox(label="Hasil Prediksi")
 
 def review_to_vec(tokens, model):
     vecs = [model[word] for word in tokens if word in model]
@@ -44,9 +44,10 @@ def predict_sentiment(text):
 
 interface = gr.Interface(
     fn=predict_sentiment,
+    inputs=inputs,
+    outputs=outputs,
+    clear_btn=True,
     flagging_mode="never",
-    inputs=gr.Textbox(label="Masukkan ulasan"),
-    outputs=gr.Textbox(label="Hasil Prediksi"),
     title="Maxim Analisis Sentimen",
     description="Yuk, berikan ulasanmu tentang Maxim 🤗"
 )
