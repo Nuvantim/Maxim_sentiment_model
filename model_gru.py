@@ -215,6 +215,6 @@ try:
         
     print(f"✅ Model berhasil digabung")
 except Exception as e:
-    print(f"⚠️ Gagal menggabung file: {e}"
+    print(f"⚠️ Gagal menggabung file: {e}")
 
 print(f"✅ Model berhasil diexport ke ONNX: {onnx_path}")
