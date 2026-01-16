@@ -89,7 +89,6 @@ ftz = fasttext.train_supervised(
     wordNgrams=2          
 )
 ftz.quantize(input='temp_train.txt', retrain=True)
-if not os.path.exists('models'): os.makedirs('models')
 ftz.save_model("models/maxim_fasttext.ftz")
 os.remove('temp_train.txt')
 
