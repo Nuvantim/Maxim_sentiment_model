@@ -183,18 +183,21 @@ print(f"Model saved in {save_dir}")
 # -----------------------------
 # 13.Export to ONNX Model
 # -----------------------------
-dummy_input = torch.randn(1, 50, input_size, dtype=torch.float32)
+dummy_input = torch.randn(1, input_size, dtype=torch.float32) 
 
 onnx_path = f"{save_dir}/maxim-sentiment-models.onnx"
+
+model.eval()
+
 torch.onnx.export(
     model,
     dummy_input,
     onnx_path,
     input_names=["input"],
     output_names=["output"],
-    opset_version=17,
+    opset_version=18,
     dynamic_axes={
-        "input": {0: "batch_size", 1: "seq_len"},
+        "input": {0: "batch_size"},
         "output": {0: "batch_size"}
     }
 )
