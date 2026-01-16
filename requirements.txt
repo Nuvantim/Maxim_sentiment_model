@@ -19,3 +19,4 @@ onnxscript
 seaborn
 google-play-scraper
 wordcloud
+fasttext
