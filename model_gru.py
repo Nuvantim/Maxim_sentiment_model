@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import emoji
+import onnx
 import torch
 import joblib
 import os
@@ -184,11 +185,9 @@ print(f"Model saved in {save_dir}")
 # 13.Export to ONNX Model
 # -----------------------------
 dummy_input = torch.randn(1, input_size, dtype=torch.float32) 
-
 onnx_path = f"{save_dir}/maxim-sentiment-models.onnx"
 
 model.eval()
-
 torch.onnx.export(
     model,
     dummy_input,
@@ -201,5 +200,21 @@ torch.onnx.export(
         "output": {0: "batch_size"}
     }
 )
+try:
+    onnx_model = onnx.load(onnx_path)
+    onnx.save_model(
+        onnx_model, 
+        onnx_path, 
+        save_as_external_data=False
+    )
+    
+    # Remove format .data file
+    data_file = f"{onnx_path}.data"
+    if os.path.exists(data_file):
+        os.remove(data_file)
+        
+    print(f"✅ Model berhasil digabung")
+except Exception as e:
+    print(f"⚠️ Gagal menggabung file: {e}"
 
 print(f"✅ Model berhasil diexport ke ONNX: {onnx_path}")
