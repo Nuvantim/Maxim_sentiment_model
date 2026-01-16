@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import emoji
+import os
 import nltk
 from nltk.tokenize import word_tokenize
 from gensim.models import FastText
@@ -66,7 +67,7 @@ model = FastText(
     window=5,
     min_count=5,
     sg=1,
-    epochs=30
+    epochs=12
 )
 
 # -----------------------------
