@@ -83,11 +83,12 @@ print("✅ FastText vectors berhasil diexport ke models/maxim_fasttext.vec")
 # -----------------------------
 ftz = fasttext.train_supervised(
     input='temp_train.txt', 
-    dim=500,               
+    dim=420,               
     epoch=30,              
     minCount=5,            
     lr=0.5,                
-    wordNgrams=2          
+    wordNgrams=2,
+    bucket=1000000
 )
 ftz.quantize(input='temp_train.txt', retrain=True)
 ftz.save_model("models/maxim_fasttext.ftz")
