@@ -181,6 +181,10 @@ joblib.dump(le, f"{save_dir}/label_encoder.pkl")
 
 print(f"Model saved in {save_dir}")
 
+file_json = joblib.load("models/label_encoder.pkl")
+with open("models/label_encoder.json", "w") as f:
+    json.dump(file_json.classes_.tolist(), f)
+
 # -----------------------------
 # 13.Export to ONNX Model
 # -----------------------------
