@@ -188,7 +188,7 @@ with open("models/label_encoder.json", "w") as f:
 # -----------------------------
 # 13.Export to ONNX Model
 # -----------------------------
-dummy_input = torch.randn(1, 1, input_size, dtype=torch.float32) 
+dummy_input = torch.randn(1, input_size, dtype=torch.float32)
 onnx_path = f"{save_dir}/maxim-sentiment-models.onnx"
 
 model.eval()
