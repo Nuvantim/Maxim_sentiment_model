@@ -83,7 +83,7 @@ print("✅ FastText vectors berhasil diexport ke models/maxim_fasttext.vec")
 # -----------------------------
 ftz = fasttext.train_supervised(
     input='temp_train.txt', 
-    dim=420,               
+    dim=500,               
     epoch=30,              
     minCount=5,            
     lr=0.5,                
