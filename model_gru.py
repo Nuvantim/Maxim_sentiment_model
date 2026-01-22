@@ -96,6 +96,8 @@ class GRUClassifier(nn.Module):
         self.fc2 = nn.Linear(64, num_classes)
 
     def forward(self, x):
+        if x.dim() == 2:
+            x = x.unsqueeze(1)
         out, _ = self.gru(x)
         out = out[:, -1, :]
         out = self.relu(self.fc1(out))
