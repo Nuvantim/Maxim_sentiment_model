@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import emoji
 import onnx
+from onnxsim import simplify
 import torch
 import joblib
 import os
@@ -201,10 +202,20 @@ torch.onnx.export(
     opset_version=15,
     do_constant_folding=True,
     dynamic_axes={
-        "input": {0: "batch_size"},
+        "input": {0: "batch_size", 1: "sequence_len"},
         "output": {0: "batch_size"}
     }
 )
+
+try:
+    model_onnx = onnx.load(onnx_path)
+    model_simp, check = simplify(model_onnx)
+    if check:
+        onnx.save(model_simp, onnx_path)
+        print("✅ Model berhasil di-simplify dengan onnxsim")
+except Exception as e:
+    print(f"⚠️ Gagal melakukan simplify: {e}")
+              
 try:
     onnx_model = onnx.load(onnx_path)
     onnx.save_model(
