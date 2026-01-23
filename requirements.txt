@@ -14,6 +14,7 @@ huggingface_hub
 matplotlib
 joblib
 onnx
+onnxsim
 onnxruntime
 onnxscript
 seaborn
