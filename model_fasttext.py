@@ -51,6 +51,8 @@ model = FastText(
     epochs=12
 )
 model.save("models/maxim_fasttext.model")
+model.wv.save_word2vec_format("models/maxim_fasttext.vec", binary=False)
+model.wv.save_word2vec_format("models/maxim_fasttext.bin", binary=True)
 print("✅ fasttext .model created")
 
 # -----------------------------
@@ -76,7 +78,7 @@ print("\n=== DISTRIBUSI SESUDAH BALANCE ===")
 print(data_balanced['label'].value_counts())
 print(f"Total baris setelah balancing: {len(data_balanced)}")
 # -----------------------------
-# 5. Build FTZ Format
+# 5. Build .bin Format
 # -----------------------------
 ftz = fasttext.train_supervised(
     input='temp_train.txt', 
@@ -87,8 +89,7 @@ ftz = fasttext.train_supervised(
     wordNgrams=2,
     bucket=1000000
 )
-ftz.quantize(input='temp_train.txt', retrain=True)
-ftz.save_model("models/maxim_fasttext.ftz")
+ftz.save_model("models/maxim_supervised.bin")
 os.remove('temp_train.txt')
 
-print("✅ .ftz model created")
+print("✅ .bin model created")
