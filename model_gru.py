@@ -183,9 +183,6 @@ joblib.dump(le, f"{save_dir}/label_encoder.pkl")
 print(f"Model saved in {save_dir}")
 
 file_json = joblib.load("models/label_encoder.pkl")
-with open("models/label_encoder.json", "w") as f:
-    json.dump(file_json.classes_.tolist(), f)
-
 # -----------------------------
 # 13.Export to ONNX Model
 # -----------------------------
@@ -199,7 +196,7 @@ torch.onnx.export(
     onnx_path,
     input_names=["input"],
     output_names=["output"],
-    opset_version=15,
+    opset_version=18,
     do_constant_folding=True,
     dynamic_axes={
         "input": {0: "batch_size", 1: "sequence_len"},
