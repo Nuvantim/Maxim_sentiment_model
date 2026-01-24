@@ -8,8 +8,8 @@ from gensim.models import FastText
 import fasttext
 from tqdm import tqdm
 import logging
-import json
-from sklearn.preprocessing import LabelEncoder
+from imblearn.over_sampling import RandomOverSampler
+from collections import Counter
 
 # -----------------------------
 # 1. Load dataset
@@ -32,11 +32,21 @@ data = data.dropna(subset=['review'])
 # 3. Remove neutral labels
 # -----------------------------
 data = data[data['label'] != 'NETRAL']
+print(f"Distribusi awal: {Counter(data['label'])}")
+ros = RandomOverSampler(random_state=42)
+X_resampled, y_resampled = ros.fit_resample(data[['review']], data['label'])
 
-# Export fasttext data formatting
-data['review'] = data['review'].str.lower()
-data['ft_input'] = '__label__' + data['label'].astype(str) + ' ' + data['review']
-data['ft_input'].to_csv('temp_train.txt', index=False, header=False)
+data_balanced = pd.DataFrame({
+    'review': X_resampled['review'],
+    'label': y_resampled
+})
+print(f"Distribusi setelah Balancing: {Counter(data_balanced['label'])}")
+
+# -----------------------------
+# Export FastText formatting
+# -----------------------------
+data_balanced['ft_input'] = '__label__' + data_balanced['label'].astype(str) + ' ' + data_balanced['review']
+data_balanced['ft_input'].to_csv('temp_train.txt', index=False, header=False, quoting=3, escapechar=' ')
 
 # -----------------------------
 # 4. Tokenize words
@@ -85,8 +95,8 @@ ftz = fasttext.train_supervised(
     input='temp_train.txt', 
     dim=500,               
     epoch=30,              
-    minCount=5,            
-    lr=0.5,                
+    minCount=2,            
+    lr=0.2,                
     wordNgrams=2,
     bucket=1000000
 )
