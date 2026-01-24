@@ -196,10 +196,10 @@ torch.onnx.export(
     onnx_path,
     input_names=["input"],
     output_names=["output"],
-    opset_version=18,
+    opset_version=15,
     do_constant_folding=True,
     dynamic_axes={
-        "input": {0: "batch_size", 1: "sequence_len"},
+        "input": {0: "batch_size"},
         "output": {0: "batch_size"}
     }
 )
