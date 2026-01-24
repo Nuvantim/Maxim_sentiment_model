@@ -1,8 +1,7 @@
-numpy
-emoji
+gradio==5.49.0
+scikit-learn==1.7.2
 gensim
+emoji
 joblib
 onnx
 onnxruntime
-gradio
-scikit-learn
