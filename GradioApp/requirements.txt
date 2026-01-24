@@ -5,3 +5,4 @@ joblib
 onnx
 onnxruntime
 gradio
+scikit-learn
