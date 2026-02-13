@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta content="width=device-width,initial-scale=1" name="viewport" />
+    <link rel="icon" href="https://huggingface.co/front/assets/huggingface_logo-noborder.svg" type="image/svg+xml">
+    <title>Maxim Sentiment Analysis</title>
+    <style>
+      :root {
+      --maxim-yellow: #ffd95a;
+      --bg-color: #070f2b;
+      --card-white: #ffffff;
+      --text-main: #1a1a1a;
+      --text-sub: #71717a;
+      --success-green: #059669;
+      --error-red: #ef4444;
+      --border-default: #e4e4e7;
+      --warning-orange: #f59e0b;
+      }
+      body {
+      background-color: var(--bg-color);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+      sans-serif;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: var(--text-main);
+      overflow: hidden;
+      }
+      #loader {
+      position: fixed;
+      inset: 0;
+      background: var(--bg-color);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+      transition: opacity 0.5s ease;
+      }
+      .spinner {
+      width: 60px;
+      height: 60px;
+      border: 3px solid rgba(255, 217, 90, 0.1);
+      border-top: 3px solid var(--maxim-yellow);
+      border-radius: 50%;
+      animation: spin 1s cubic-bezier(0.5, 0.1, 0.4, 0.9) infinite;
+      }
+      @keyframes spin {
+      0% { transform: rotate(0); }
+      100% { transform: rotate(360deg); }
+      }
+      /* --- Toast Styles --- */
+      #toast-container {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      pointer-events: none;
+      }
+      .toast {
+      padding: 12px 16px 12px 24px;
+      border-radius: 12px;
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 500;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      animation: toastIn 0.3s ease forwards;
+      pointer-events: auto;
+      min-width: 280px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      }
+      .toast-close {
+      background: none;
+      border: none;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 1.4rem;
+      cursor: pointer;
+      padding: 0 4px;
+      line-height: 1;
+      transition: color 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      }
+      .toast-close:hover {
+      color: #fff;
+      }
+      @keyframes toastIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+      }
+      /* --- Card Styles --- */
+      .card {
+      background: var(--card-white);
+      width: 85%;
+      max-width: 320px;
+      padding: 24px 20px;
+      border-radius: 24px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      @media (min-width: 768px) {
+      .card { max-width: 500px; padding: 40px; }
+      .header h1 { font-size: 1.6rem !important; }
+      textarea { height: 160px !important; }
+      }
+      @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+      }
+      .header { text-align: center; margin-bottom: 24px; }
+      .header h1 { font-size: 1.1rem; margin: 0; font-weight: 800; text-transform: uppercase; }
+      .header p { font-size: 0.85rem; color: var(--text-sub); margin-top: 6px; }
+      textarea {
+      width: 100%;
+      height: 110px;
+      padding: 16px;
+      border: 1.5px solid var(--border-default);
+      border-radius: 16px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      resize: none;
+      box-sizing: border-box;
+      background: #fafafa;
+      transition: all 0.3s ease;
+      }
+      textarea:focus { outline: 0; border-color: var(--maxim-yellow); background: #fff; }
+      textarea:disabled { background: #f0f0f0; cursor: not-allowed; opacity: 0.7; }
+      .footer-info { display: flex; justify-content: flex-end; margin-top: 10px; font-size: 0.75rem; color: var(--text-sub); }
+      .btn {
+      width: 100%;
+      background: var(--maxim-yellow);
+      color: #000;
+      border: none;
+      padding: 15px;
+      border-radius: 14px;
+      font-weight: 700;
+      font-size: 1rem;
+      margin-top: 20px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      }
+      .btn:hover:not(:disabled) { filter: brightness(0.94); transform: translateY(-2px); }
+      .btn:disabled { background: #f1f1f4; color: #a1a1aa; cursor: not-allowed; }
+    </style>
+  </head>
+  <body>
+    <div id="toast-container"></div>
+    <div id="loader">
+      <div class="spinner"></div>
+      <div class="loader-text" style="color: #fff; margin-top: 15px">
+        Initializing
+      </div>
+    </div>
+    <div class="card" style="display: none" id="app">
+      <div class="header">
+        <h1>Maxim Analysis Sentiment</h1>
+        <p>Berikan ulasan anda tentang Maxim 🤗</p>
+      </div>
+      <form id="sentimentForm">
+        <textarea
+          id="messageArea"
+          maxlength="250"
+          placeholder="Ulasan anda.."
+          ></textarea>
+        <div class="footer-info"><span id="charCount">0/250</span></div>
+        <button class="btn" disabled id="submitBtn" type="submit">
+        Analisis Sentimen
+        </button>
+      </form>
+    </div>
+    <!-- Development -->
+    <script type="text/javascript" src="/dist/msgpack.min.js"></script>
+
+    <!-- Deployment -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@msgpack/msgpack@3.1.3/dist.umd/msgpack.min.js"></script> -->
+
+    <script>
+      const loader = document.getElementById("loader");
+      const app = document.getElementById("app");
+      const textarea = document.getElementById("messageArea");
+      const submitBtn = document.getElementById("submitBtn");
+      const charCount = document.getElementById("charCount");
+      const form = document.getElementById("sentimentForm");
+      const toastContainer = document.getElementById("toast-container");
+      
+      // --- Custom Notification System ---
+      function showToast(message, type = "info") {
+        const toast = document.createElement("div");
+        toast.className = `toast`;
+      
+        const colors = {
+          success: "var(--success-green)",
+          error: "var(--error-red)",
+          warning: "var(--warning-orange)",
+        };
+      
+        toast.style.backgroundColor = colors[type] || "#333";
+        
+        // Menambahkan struktur tombol close
+        toast.innerHTML = `
+          <span>${message}</span>
+          <button class="toast-close">&times;</button>
+        `;
+      
+        toastContainer.appendChild(toast);
+      
+        // Fungsi hapus toast
+        const removeToast = () => {
+          toast.style.opacity = "0";
+          toast.style.transition = "opacity 0.5s ease";
+          setTimeout(() => {
+            if (toast.parentNode) toast.remove();
+          }, 500);
+        };
+      
+        // Event listener klik tombol close
+        toast.querySelector(".toast-close").addEventListener("click", (e) => {
+          e.stopPropagation();
+          removeToast();
+        });
+      
+        // Auto remove dalam 4 detik
+        const autoCloseTimeout = setTimeout(removeToast, 4000);
+      }
+      
+      // --- Loader logic ---
+      window.addEventListener("load", () => {
+        setTimeout(() => {
+          loader.style.opacity = "0";
+          setTimeout(() => {
+            loader.style.display = "none";
+            app.style.display = "block";
+            textarea.focus();
+          }, 500);
+        }, 800);
+      });
+      
+      // --- Input validation ---
+      textarea.addEventListener("input", (e) => {
+        const len = e.target.value.length;
+        charCount.textContent = `${len}/250`;
+      
+        if (len >= 3) {
+          submitBtn.disabled = false;
+          textarea.style.borderColor = "var(--success-green)";
+        } else {
+          submitBtn.disabled = true;
+          textarea.style.borderColor = len > 0 ? "var(--error-red)" : "var(--border-default)";
+        }
+      });
+      
+      // --- Form submission logic ---
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const messageValue = textarea.value;
+      
+        submitBtn.disabled = true;
+        textarea.disabled = true;
+        submitBtn.innerText = "Menganalisis...";
+      
+        // Deployment
+        // const uri = "/maxim/sentiment-prediction";
+        
+        // Development
+        const uri = "/sentiment-prediction";
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 13000);
+      
+        try {
+          const requestData = { message: messageValue };
+          const encodedData = MessagePack.encode(requestData);
+      
+          const response = await fetch(uri, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-msgpack",
+              "Accept": "application/x-msgpack",
+            },
+            body: encodedData,
+            signal: controller.signal,
+          });
+      
+          clearTimeout(timeoutId);
+      
+          const buffer = await response.arrayBuffer();
+          const data = MessagePack.decode(new Uint8Array(buffer));
+      
+          if (!response.ok) {
+            const serverErrorMessage = data.problem || `Server Error (${response.status})`;
+            throw new Error(serverErrorMessage);
+          }
+          const predictionText = data.prediction || "Hasil tidak diketahui";
+          const match = predictionText.match(/(POSITIF|NEGATIF)\s*\(([\d.]+)\%\)/i);
+      
+          if (match) {
+            const sentiment = match[1].toUpperCase();
+            showToast(
+              `Sentimen: ${predictionText}`,
+              sentiment === "POSITIF" ? "success" : "error"
+            );
+          } else {
+            showToast(predictionText);
+          }
+        } catch (error) {
+          if (error.name === "AbortError") {
+            showToast("Request timeout, please try again", "warning");
+          } else {
+            showToast(`Error: ${error.message}`, "warning");
+          }
+        } finally {
+          submitBtn.disabled = false;
+          textarea.disabled = false;
+          submitBtn.innerText = "Analisis Sentimen";
+        }
+      });
+    </script>
+  </body>
+</html>

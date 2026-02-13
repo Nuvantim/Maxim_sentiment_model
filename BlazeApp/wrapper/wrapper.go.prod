@@ -1,0 +1,35 @@
+package wrapper
+
+/*
+#cgo CXXFLAGS: -I${SRCDIR}/../include -std=c++17
+#cgo LDFLAGS: -L${SRCDIR}/../lib -lwrapper -lonnxruntime -lstdc++ -Wl,-rpath,'$ORIGIN/../lib'
+#include <stdlib.h>
+#include "wrapper.h"
+*/
+import "C"
+import (
+	"fmt"
+	"unsafe"
+)
+
+/*
+Production Purpose
+*/
+
+func ModelPrediction(word string) (int, float32, error) {
+	// Konversi string Go ke C string
+	sentiment := C.CString(word)
+
+	// Sekarang C.free akan dikenali karena sudah ada stdlib.h
+	defer C.free(unsafe.Pointer(sentiment))
+
+	// Panggil fungsi C++ melalui wrapper
+	result := C.predict_sentiment(sentiment)
+
+	if result.success == 1 {
+		return int(result.label), float32(result.probability) * 100, nil
+
+	} else {
+		return 0, 0, fmt.Errorf("failed prediction: %s", word)
+	}
+}

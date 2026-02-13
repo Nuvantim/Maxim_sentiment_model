@@ -1,0 +1,19 @@
+services:
+  maxim:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: maxim-app
+    pull_policy: never
+    container_name: maxim
+    restart: always
+    ports:
+      - "7860:7860"
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - maxim-network
+
+networks:
+  maxim-network:
+    driver: bridge
