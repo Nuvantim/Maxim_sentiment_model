@@ -1,7 +1,7 @@
 # BlazeApp
 
 <a href="https://guthib">
-<img src="https://github.com/Nuvantim/Maxim_sentiment_model/blob/main/image/mascot.png">
+<img src="https://github.com/Nuvantim/Maxim_sentiment_model/blob/main/image/mascot.png" width=80%>
 </a>
 
 This project is an advancement in deploying machine learning models using ONNX and FastText. The application is developed in Go as the backend, which executes C++ libraries to perform sentiment prediction based on the trained model.
