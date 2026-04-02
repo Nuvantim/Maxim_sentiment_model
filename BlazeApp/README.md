@@ -34,8 +34,8 @@ p7zip-full
 Download and install the Go runtime:
 
 ```bash
-wget https://go.dev/dl/go1.24.0.linux-amd64.tar.gz && \
-sudo tar -C /usr/local -xzf go1.24.0.linux-amd64.tar.gz && \
+wget https://go.dev/dl/go1.26.1.linux-amd64.tar.gz && \
+sudo tar -C /usr/local -xzf go1.26.1.linux-amd64.tar.gz && \
 export PATH=$PATH:/usr/local/go/bin
 ```
 
