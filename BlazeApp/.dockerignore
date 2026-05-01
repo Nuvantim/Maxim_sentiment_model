@@ -1,0 +1,15 @@
+.github/
+cmd/
+config/
+include/
+internal/
+pkg/
+wrapper/
+.gitignore
+Dockerfile
+Makefile
+README.md
+docker-compose.yml
+go.mod
+go.sum
+lib.7z

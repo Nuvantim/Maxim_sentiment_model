@@ -1,0 +1,19 @@
+services:
+  maxim:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: gradio-app
+    pull_policy: never
+    container_name: gradio
+    restart: always
+    ports:
+      - "7860:7860"
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - gradio-network
+
+networks:
+  gradio-network:
+    driver: bridge

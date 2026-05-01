@@ -1,17 +1,15 @@
-FROM alpine:latest
+FROM ubuntu:latest
+
+ENV TERM=xterm-256color
 
 # Set working directory
 WORKDIR /app
 
 # Copy Folder
-COPY ./models ./models
-COPY ./lib ./lib
-COPY ./bin ./bin
-COPY ./views ./views
-COPY .env .env
+COPY . .
 
-# Memberikan akses eksekusi pada binary
-RUN chmod +x /app/bin/api
+# Give permission
+RUN chmod +x bin/api
 
 # Jalankan aplikasi
 CMD ["./bin/api"]
