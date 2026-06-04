@@ -41,7 +41,7 @@ func SentimentPrediction(c *fiber.Ctx) error {
 		return c.Status(500).Send(Response(request.ErrorResponse{err.Error()}))
 	}
 
-	go logs.SaveLog(req.Message)
+	go logs.SaveLog(req.Message, data.Prediction)
 
 	c.Set("Content-Type", "application/x-msgpack")
 	return c.Status(200).Send(Response(data))

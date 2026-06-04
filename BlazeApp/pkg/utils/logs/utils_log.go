@@ -1,11 +1,12 @@
 package logs
 
 import (
+	"fmt"
 	"log"
 	"os"
 )
 
-func SaveLog(word string) {
+func SaveLog(word, prediction string) {
 	f, err := os.OpenFile("log.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		log.Printf("Gagal membuka file log: %v", err)
@@ -13,6 +14,7 @@ func SaveLog(word string) {
 		defer f.Close()
 		// Menulis ke log dengan format standar (termasuk tanggal & jam)
 		logger := log.New(f, "", log.LstdFlags)
-		logger.Println(word)
+		sentiment := fmt.Sprintf("%s (%s)", word, prediction)
+		logger.Println(sentiment)
 	}
 }
